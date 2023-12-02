@@ -2,6 +2,7 @@ package rr;
 import java.io.InvalidClassException;
 
 public class Processo {
+    private int _horaDoTermino;
     private int numero;
     private int duracao;
     private int tempoDeExecucao = 0;
@@ -15,6 +16,28 @@ public class Processo {
         this.tempoDeIngresso = tempoDeIngresso;
         this.isOn = false;
     }
+    public int getTermino(){
+        return _horaDoTermino;
+    }
+
+    public int getVida(){
+        return (tempoDeEspera + duracao)-tempoDeIngresso;
+    }
+    public int getEspera(){
+        return tempoDeEspera;
+    }
+    //Todo: ver se isso aqui não tá lançando nenhuma exceção e tals
+    public int getVida2(){
+        return _horaDoTermino - tempoDeIngresso;
+    }
+    public int getEspera2(){
+        return getVida2() - duracao;
+    }
+    public void setTermino(int horaDoTermino){
+        this._horaDoTermino = horaDoTermino;
+    }
+
+
     public int getNumero(){
         return numero;
     }
@@ -22,9 +45,13 @@ public class Processo {
         return duracao;
     }
 
-    public void executar( )throws InvalidClassException{
-        if(isFinished())
-            throw new InvalidClassException("Processo já encerrou!!!");
+    public void executar( ){
+        if(isFinished()){
+            System.out.println("tentou executar quadno nao devia...");
+            System.out.flush();
+            System.exit(1);
+
+        }
         tempoDeExecucao++;
     }
 
@@ -38,10 +65,6 @@ public class Processo {
 
     public boolean isFinished(){
         return tempoDeExecucao == duracao;
-    }
-        
-    public int getEspera(){
-        return tempoDeEspera;
     }
 
     public Integer getIngresso(){

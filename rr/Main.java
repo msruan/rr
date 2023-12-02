@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
-import java.io.InvalidClassException;
 //import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -50,7 +49,7 @@ public class Main {
     }
 
     public void executar(){
-
+        
         Scanner input = new Scanner(System.in);
 
         List<Processo> novos = new ArrayList<>(listaDeProcessos);
@@ -59,17 +58,23 @@ public class Main {
         
         Queue<Processo> fila = new LinkedList<>();
 
-        int tempo = 0, contadorQuantum = 0, i = 0, trocaDeContexto = TC;
+        int tempo = 0, contadorQuantum = QUANTUM, trocaDeContexto = TC;
         
-        do{
+        while(listaDeProcessos.size() > terminados.size()){
+            
+            System.out.println("=============================");
 
             List<Processo> aRemover = new ArrayList<>();
+
             for(Processo processo : novos){
                 System.out.println("Entrou no ngc de jogar processos na espera...");
-                //input.nextLine();
 
                 if(processo.getIngresso() == tempo){//sim
                     esperando.add(processo);
+                    if(fila.isEmpty()){
+                        processo.on();
+                        execOn();
+                    }
                     fila.add(processo); 
                     aRemover.add(processo);
                 }
@@ -101,50 +106,44 @@ public class Main {
             }
 
             else if(isExecuting()){
-                System.out.print(RED_BOLD_BRIGHT+"EXECUTANDO processo");
+                System.out.print(RED_BOLD_BRIGHT+"EXECUTANDO processo {"+GREEN_BOLD_BRIGHT);
                 //input.nextLine();
                 Processo finalizado = null;
 
                 for(Processo processo : esperando){
 
                     if(processo.isOn()){
-                        System.out.println(+processo.getNumero()+"..."+RESET);
+                        System.out.println(+processo.getNumero()+"}..."+RESET);
 
-                        try{
-                            --contadorQuantum;
-                            processo.executar();
+                        --contadorQuantum;
+                        processo.executar();
 
-                            if(contadorQuantum==0){//era if(--contadorQuantum)
-
-                                if(processo.isFinished())  
-                                    throw new InvalidClassException(null);
-                                else if(fila.size()==1){
-                                    contadorQuantum = QUANTUM;
-                                }
-                                else {
-                                    processo.off();
-                                    fila.add(fila.poll());
-                                    execOff();
-                                    System.out.println(GREEN_BOLD_BRIGHT+"O tempo de execuaco restante do processo é "+(processo.getDuracao()-processo.getExecucao())+RESET);
-                                    swappOn();
-                                    trocaDeContexto = TC;
-                                }
-                            }
-                        }
-                        catch(InvalidClassException e){
-                            finalizado = processo;
+                        if(contadorQuantum==0 && !processo.isFinished()){//era if(--contadorQuantum)
+                            
                             processo.off();
                             execOff();
                             swappOn();
-                            trocaDeContexto = TC-1;//era só TC
-                            terminados.add(fila.poll());
-                            System.out.println(YELLOW_BOLD_BRIGHT+"Já cabou..."+RESET);
-                            // if(!fila.isEmpty()){
-                            //     contadorQuantum = QUANTUM;
-                            //         fila.peek().on();
-                            //         continue;
-                            // }
+                            trocaDeContexto = TC;
+                            fila.add(fila.poll());
+                            System.out.println(GREEN_BOLD_BRIGHT+"O tempo de execuaco restante do processo é "+(processo.getDuracao()-processo.getExecucao())+RESET);
                         }
+
+                        else if(processo.isFinished()){
+                            
+                            processo.off();
+                            execOff();
+                            swappOn();
+                            trocaDeContexto = TC;
+
+                            finalizado = processo;
+                            finalizado.setTermino(tempo+1);//Todo: será é tempo + 1?
+
+                            terminados.add(fila.poll());
+
+                            System.out.println(YELLOW_BOLD_BRIGHT+"Já cabou..."+RESET);
+                        }
+                            
+                        
                     }
                     else 
                         processo.esperar();   
@@ -167,17 +166,45 @@ public class Main {
                 System.out.println("algo deu muito errado");
                 System.exit(1);
             }
-            System.out.println("\n==========================");
-            System.out.println("Já tô na "+i+" volta..."); i++;
-            System.out.println("Já tô no tempo "+tempo+"...");
+
+            System.out.println("Já tô no tempo "+(++tempo)+"...");
             System.out.println("Quantum = "+contadorQuantum+"...");
             System.out.println("Troca de contexto = "+trocaDeContexto+"...");
             System.out.println("==========================\n");
-            tempo++;
 
-        }while (listaDeProcessos.size() > terminados.size());
+        };
         System.out.println("Tempo de execução: "+tempo);
         input.close();
+        int esperaTotal = 0, vidaTotal = 0;
+        // for(Processo processo: listaDeProcessos){
+        //     esperaTotal += processo.getEspera();
+        //     vidaTotal += processo.getVida();
+        // }
+        // }System.out.println(CYAN_BOLD_BRIGHT+"Tempo de espera total: "+esperaTotal);
+        // System.out.println("Tempo de espera médio: "+(((double)esperaTotal))/listaDeProcessos.size());
+        // System.out.println("============================");
+        // System.out.println("Tempo de vida total: "+vidaTotal);
+        // System.out.println("Tempo de vida médio: "+(((double)vidaTotal))/listaDeProcessos.size()+RESET);
+        // for(int j = 0; j< listaDeProcessos.size(); j ++){
+        //     Processo processo = listaDeProcessos.get(j);
+        //     System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}\n",j+1,processo.getVida(),processo.getEspera());
+        // }
+        esperaTotal = 0; vidaTotal = 0;
+        for(int j = 0; j< listaDeProcessos.size(); j ++){
+            Processo processo = listaDeProcessos.get(j);
+            System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}, Ingresso-> {%d}, Termino-> {%d}\n",processo.getNumero(),processo.getVida2(),processo.getEspera2(),processo.getIngresso(),processo.getTermino());
+            vidaTotal += processo.getVida2();
+            esperaTotal += processo.getEspera2();
+        }
+
+
+        System.out.println(GREEN_BOLD_BRIGHT+"\n\n--------2---------------------------------------");
+        System.out.println(CYAN_BOLD_BRIGHT+"Tempo de espera total: "+esperaTotal);
+        System.out.println("Tempo de espera médio: "+(((double)esperaTotal))/listaDeProcessos.size());
+        System.out.println("============================");
+        System.out.println("Tempo de vida total: "+vidaTotal);
+        System.out.println("Tempo de vida médio: "+(((double)vidaTotal))/listaDeProcessos.size()+RESET);
+
     }
    
 
@@ -229,10 +256,21 @@ public class Main {
         // };
         quantum = 20;
         trocaDeContexto = 5;
+        // lista.add(new Processo(1,20,0));
+        // lista.add(new Processo(2,20,2));
+        // lista.add(new Processo(3,40,1));
+        // lista.add(new Processo(1,40,4));
+        // quantum = 20;
+        // trocaDeContexto = 5;
         lista.add(new Processo(1,40,4));
         lista.add(new Processo(2,20,1));
         lista.add(new Processo(3,50,3));
         lista.add(new Processo(4,30,0));
+        // quantum = 2;
+        // trocaDeContexto = 1;
+        // lista.add(new Processo(1,10,0));
+        // lista.add(new Processo(2,4,0));
+        // lista.add(new Processo(3,3,0));
 
         Main main = new Main(quantum, trocaDeContexto, lista);
         main.executar();

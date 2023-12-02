@@ -1,0 +1,53 @@
+- o programa dá pau se ngm entrar no momento 0
+- se a troca de contexto for igual a 0 tbm dá pau
+- nao sei direito se o comportamento tá certo pra quando apenas um processo executa, se vai haver t.c e quantum, etc
+- plotar gráficos
+- botar suporte de novo à entrada de dados
+- limpar código
+
+/ O jornalista Oldemário Touguinhó, conta \
+| que nos                                 |
+|                                         |
+| anos 1960, numa partida do Santos com o |
+| São                                     |
+|                                         |
+| Paulo, um zagueiro respeitado, estava   |
+| tenso,                                  |
+|                                         |
+| marcando Pelé. Num lance normal, em que |
+| a bola                                  |
+|                                         |
+| acabou nas mãos do goleiro Picasso,     |
+| Pelé                                    |
+|                                         |
+| caminhava em direção ao campo do        |
+| Santos,                                 |
+|                                         |
+| acompanhado pelo zagueiro. De repente,  |
+| o jogador                               |
+|                                         |
+| olha para o gol, ainda dentro da área   |
+| do São                                  |
+|                                         |
+| Paulo, esbugalha os olhos e sai         |
+| correndo em                             |
+|                                         |
+| direção ao gol. O zagueiro, de costas   |
+| para o                                  |
+|                                         |
+| gol, sem ver o que está acontecendo,    |
+| derruba                                 |
+|                                         |
+| Pelé na área. Pênalti marcado. O        |
+| zagueiro,                               |
+|                                         |
+| então, percebe que a bola continuava    |
+| serena nas                              |
+|                                         |
+| mãos de Picasso e Pelé o enganara, sai  |
+| então                                   |
+|                                         |
+| atrás do jogador, tentando agredi-lo.   |
+| Coisas do                               |
+|                                         |
+\ Rei.    

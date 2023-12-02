@@ -111,9 +111,10 @@ public class Main {
                         System.out.println(+processo.getNumero()+"..."+RESET);
 
                         try{
+                            --contadorQuantum;
                             processo.executar();
 
-                            if(--contadorQuantum==0){
+                            if(contadorQuantum==0){//era if(--contadorQuantum)
 
                                 if(processo.isFinished())  
                                     throw new InvalidClassException(null);
@@ -128,9 +129,6 @@ public class Main {
                                     swappOn();
                                     trocaDeContexto = TC;
                                 }
-
-                                
-                                
                             }
                         }
                         catch(InvalidClassException e){
@@ -138,7 +136,7 @@ public class Main {
                             processo.off();
                             execOff();
                             swappOn();
-                            trocaDeContexto = TC;
+                            trocaDeContexto = TC-1;//era só TC
                             terminados.add(fila.poll());
                             System.out.println(YELLOW_BOLD_BRIGHT+"Já cabou..."+RESET);
                             // if(!fila.isEmpty()){

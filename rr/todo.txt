@@ -1,6 +1,7 @@
 - o programa dá pau se ngm entrar no momento 0
 - se a troca de contexto for igual a 0 tbm dá pau
 - nao sei direito se o comportamento tá certo pra quando apenas um processo executa, se vai haver t.c e quantum, etc
+- se eu fizer o todo acima, o que um processo deve fazer se depois de executar tipo 30 u.t sendo q o quantum é 20, surgir outro processo?
 - plotar gráficos (e nesse caso aqui, provavelmente vou deixar og gráfico como um atributo string, aí o método esperar por exemplo, ao invés de aumentar o tempo de espera, vai é adicionar um espaço em branco à string gráfico. e o executar adicionaria uma barrinha... mas o caso da troca de contexto seria de se pensar...
 - botar suporte de novo à entrada de dados
 - limpar código

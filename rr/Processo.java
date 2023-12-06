@@ -1,5 +1,4 @@
 package rr;
-import java.io.InvalidClassException;
 
 public class Processo {
     private int _horaDoTermino;

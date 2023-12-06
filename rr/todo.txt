@@ -1,3 +1,5 @@
+- tá imprimindo um entrou na troca de contexto extra
+- organizar saida final do programa
 - o programa dá pau se ngm entrar no momento 0
 - se a troca de contexto for igual a 0 tbm dá pau
 - nao sei direito se o comportamento tá certo pra quando apenas um processo executa, se vai haver t.c e quantum, etc

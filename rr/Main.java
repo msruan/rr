@@ -1,3 +1,4 @@
+
 package rr;
 import java.util.Scanner;
 
@@ -69,7 +70,7 @@ public class Main {
             for(Processo processo : novos){
                 System.out.println("Entrou no ngc de jogar processos na espera...");
 
-                if(processo.getIngresso() == tempo){//sim
+                if(processo.getIngresso() == tempo || processo.getIngresso() == tempo +1){//sim
                     esperando.add(processo);
                     if(fila.isEmpty()){
                         processo.on();
@@ -101,11 +102,11 @@ public class Main {
                         fila.peek().on();
                         continue;
                     }
-                    //continue
                 }
             }
 
             else if(isExecuting()){
+
                 System.out.print(RED_BOLD_BRIGHT+"EXECUTANDO processo {"+GREEN_BOLD_BRIGHT);
                 //input.nextLine();
                 Processo finalizado = null;
@@ -125,7 +126,7 @@ public class Main {
                             swappOn();
                             trocaDeContexto = TC;
                             fila.add(fila.poll());
-                            System.out.println(GREEN_BOLD_BRIGHT+"O tempo de execuaco restante do processo é "+(processo.getDuracao()-processo.getExecucao())+RESET);
+                            System.out.println(GREEN_BOLD_BRIGHT+"O tempo de execução restante do processo é "+(processo.getDuracao()-processo.getExecucao())+RESET);
                         }
 
                         else if(processo.isFinished()){
@@ -151,7 +152,30 @@ public class Main {
                 if(Optional.ofNullable(finalizado).isPresent()){
                     esperando.remove(finalizado);
                 }
+                //acho q daria pra remover esse aqui e deixar só tempo + 1, mas fodasse KKKKKKK
+                // for(Processo processo : novos){
+                //     System.out.println("Entrou no ngc de jogar processos na espera...");
+
+                //     if(processo.getIngresso() == tempo){//sim
+                //         esperando.add(processo);
+                //         if(fila.isEmpty()){
+                //             processo.on();
+                //             execOn();
+                //         }
+                //         fila.add(processo); 
+                //         aRemover.add(processo);
+                //     }
+                //     else{
+                //         break;
+                //     }
+                //     }
+                //     for(Processo removido : aRemover){
+                //         novos.remove(removido);
+                // }
             }
+
+            //tirar isso dps
+            
 
             else if(!fila.isEmpty()){
                 System.out.println("Entrou na fila está vazia...");
@@ -170,6 +194,11 @@ public class Main {
             System.out.println("Já tô no tempo "+(++tempo)+"...");
             System.out.println("Quantum = "+contadorQuantum+"...");
             System.out.println("Troca de contexto = "+trocaDeContexto+"...");
+            System.out.print("Fila: {");
+            for(Processo p : fila){
+                System.out.printf(" P%d -> ",p.getNumero());
+            }
+            System.out.println("}");
             System.out.println("==========================\n");
 
         };
@@ -189,6 +218,7 @@ public class Main {
         //     Processo processo = listaDeProcessos.get(j);
         //     System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}\n",j+1,processo.getVida(),processo.getEspera());
         // }
+        listaDeProcessos = listaDeProcessos.stream().sorted((h1,h2) -> h1.getNumero().compareTo(h2.getNumero())).toList();
         esperaTotal = 0; vidaTotal = 0;
         for(int j = 0; j< listaDeProcessos.size(); j ++){
             Processo processo = listaDeProcessos.get(j);
@@ -263,12 +293,19 @@ public class Main {
         // quantum = 20;
         // trocaDeContexto = 5;
 
-        quantum = 20;
-        trocaDeContexto = 5; //-> CASO DE TESTE
-        lista.add(new Processo(1,40,4));
-        lista.add(new Processo(2,20,1));
-        lista.add(new Processo(3,50,3));
-        lista.add(new Processo(4,30,0));
+        // quantum = 20;
+        // trocaDeContexto = 5; //-> CASO DE TESTE
+        // lista.add(new Processo(1,40,4));
+        // lista.add(new Processo(2,20,1));
+        // lista.add(new Processo(3,50,3));
+        // lista.add(new Processo(4,30,0));
+
+        quantum = 15;
+        trocaDeContexto = 4; //-> CASO DE TESTE
+        lista.add(new Processo(1,10,5));
+        lista.add(new Processo(2,30,15));
+        lista.add(new Processo(3,20,10));
+        lista.add(new Processo(4,40,0));
 
         // quantum = 2;
         // trocaDeContexto = 1;

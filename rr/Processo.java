@@ -37,7 +37,7 @@ public class Processo {
     }
 
 
-    public int getNumero(){
+    public Integer getNumero(){
         return numero;
     }
     public int getDuracao(){
@@ -49,7 +49,6 @@ public class Processo {
             System.out.println("tentou executar quadno nao devia...");
             System.out.flush();
             System.exit(1);
-
         }
         tempoDeExecucao++;
     }

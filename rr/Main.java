@@ -105,10 +105,10 @@ public class Main {
 
         quantum = 20;
         trocaDeContexto = 5; //-> CASO DE TESTE
-        lista.add(new Processo(1,40,4));
-        lista.add(new Processo(2,20,1));
-        lista.add(new Processo(3,50,3));
-        lista.add(new Processo(4,30,2));
+        lista.add(new Processo(1,4,40));
+        lista.add(new Processo(2,1,20));
+        lista.add(new Processo(3,3,50));
+        lista.add(new Processo(4,2,30));
 
         // quantum = 2;
         // trocaDeContexto = 0; //-> CASO DE TESTE
@@ -146,7 +146,7 @@ public class Main {
             List<Processo> aRemover = new ArrayList<>();
 
             for(Processo processo : novos){
-                System.out.println("Entrou no ngc de jogar processos na espera...");
+                //System.out.println("Entrou no ngc de jogar processos na espera...");
 
                 if(processo.getIngresso() == tempo){//sim
                     esperando.add(processo);
@@ -234,7 +234,7 @@ public class Main {
                 }
                 //acho q daria pra remover esse aqui e deixar só tempo + 1, mas fodasse KKKKKKK
                 for(Processo processo : novos){
-                    System.out.println("Entrou no ngc de jogar processos na espera...");
+                    //System.out.println("Entrou no ngc de jogar processos na espera...");
 
                     if(processo.getIngresso() == tempo){//sim
                         esperando.add(processo);
@@ -254,9 +254,6 @@ public class Main {
                 }
             }
 
-            //tirar isso dps
-            
-
             else if(!fila.isEmpty()){
                 System.out.println("Entrou na fila está vazia...");
                 //input.nextLine();
@@ -265,11 +262,6 @@ public class Main {
                 execOn();
                 contadorQuantum = QUANTUM;
             }
-
-            // else{
-            //     System.out.println("algo deu muito errado");
-            //     System.exit(1);
-            // }
 
             System.out.println("Já tô no tempo "+(++tempo)+"...");
             System.out.println("Quantum = "+contadorQuantum+"...");
@@ -302,18 +294,18 @@ public class Main {
         esperaTotal = 0; vidaTotal = 0;
         for(int j = 0; j< listaDeProcessos.size(); j ++){
             Processo processo = listaDeProcessos.get(j);
-            System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}, Ingresso-> {%d}, Termino-> {%d}\n",processo.getNumero(),processo.getVida2(),processo.getEspera2(),processo.getIngresso(),processo.getTermino());
-            vidaTotal += processo.getVida2();
-            esperaTotal += processo.getEspera2();
+            System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}, Ingresso-> {%d}, Termino-> {%d}\n",processo.getNumero(),processo.getVida(),processo.getEspera(),processo.getIngresso(),processo.getTermino());
+            vidaTotal += processo.getVida();
+            esperaTotal += processo.getEspera();
         }
 
 
         System.out.println(GREEN_BOLD_BRIGHT+"\n\n-----------------------------------------------");
         System.out.println(CYAN_BOLD_BRIGHT+"Tempo de espera total: "+esperaTotal);
-        System.err.printf("Tempo de espera médio: %f\n",(((double)esperaTotal))/listaDeProcessos.size());
+        System.err.printf("Tempo de espera médio: %f\n",(((float)esperaTotal))/listaDeProcessos.size());
         System.out.println("============================");
         System.out.println("Tempo de vida total: "+vidaTotal);
-        System.err.printf("Tempo de vida médio: %f",(((double)vidaTotal))/listaDeProcessos.size());
+        System.err.printf("Tempo de vida médio: %f",(((float)vidaTotal))/listaDeProcessos.size());
         System.out.println(RESET);
 
     }

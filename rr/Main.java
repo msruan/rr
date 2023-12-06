@@ -3,8 +3,6 @@ package rr;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
-
-//import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,33 +93,13 @@ public class Main {
         //     }
             
         // };
-        
-        // lista.add(new Processo(1,20,0));
-        // lista.add(new Processo(2,20,2));
-        // lista.add(new Processo(3,40,1));
-        // lista.add(new Processo(1,40,4));
-        // quantum = 20;
-        // trocaDeContexto = 5;
 
-        quantum = 20;
-        trocaDeContexto = 5; //-> CASO DE TESTE
-        lista.add(new Processo(1,4,40));
-        lista.add(new Processo(2,1,20));
-        lista.add(new Processo(3,3,50));
-        lista.add(new Processo(4,2,30));
-
-        // quantum = 2;
-        // trocaDeContexto = 0; //-> CASO DE TESTE
-        // lista.add(new Processo(1,0,10));
-        // lista.add(new Processo(2,0,4));
-        // lista.add(new Processo(3,0,3));
-        // lista.add(new Processo(4,0,30));
-
-        // quantum = 2;
-        // trocaDeContexto = 1;
-        // lista.add(new Processo(1,10,0));
-        // lista.add(new Processo(2,4,0));
-        // lista.add(new Processo(3,3,0));
+        quantum = 15;
+        trocaDeContexto = 4; //-> CASO DE TESTE
+        lista.add(new Processo(1,5,10));
+        lista.add(new Processo(2,15,30));
+        lista.add(new Processo(3,20,20));
+        lista.add(new Processo(4,0,40));
 
         Main main = new Main(quantum, trocaDeContexto, lista);
         main.executar();
@@ -141,7 +119,7 @@ public class Main {
         
         while(listaDeProcessos.size() > terminados.size()){
             
-            System.out.println("=============================");
+            System.out.println("╔═════════════════════════════════════════");
 
             List<Processo> aRemover = new ArrayList<>();
 
@@ -167,12 +145,15 @@ public class Main {
 
             if(isSwappingContext()){
                 
-                input.nextLine();
+                //input.nextLine();
 
                 for(Processo processo : esperando)
                     processo.esperar();    
+
                 
                 if(trocaDeContexto-- <= 0){
+                    input.nextLine();
+
                     swappOff();
                     execOn();
                     if(!fila.isEmpty()){
@@ -181,20 +162,21 @@ public class Main {
                         continue;
                     }
                 }
-                System.out.println(BLUE_BOLD_BRIGHT+"Entrou na troca de contexto..."+RESET);
+                System.out.println(BLUE_BOLD_BRIGHT+"║ TROCA DE CONTEXTO..."+RESET);
+                System.out.println("║ T.C. = "+(1+trocaDeContexto)+"...");
+
 
             }
 
             else if(isExecuting()){
 
-                System.out.print(RED_BOLD_BRIGHT+"EXECUTANDO processo {"+GREEN_BOLD_BRIGHT);
-                //input.nextLine();
+                System.out.print(RED_BOLD_BRIGHT+"║ EXECUTANDO processo {"+GREEN_BOLD_BRIGHT);
                 Processo finalizado = null;
 
                 for(Processo processo : esperando){
 
                     if(processo.isOn()){
-                        System.out.println(+processo.getNumero()+"}..."+RESET);
+                        System.out.println(+processo.getNumero()+RED_BOLD_BRIGHT+"}..."+RESET);
 
                         --contadorQuantum;
                         processo.executar();
@@ -205,7 +187,7 @@ public class Main {
                             execOff();
                             swappOn();
                             fila.add(fila.poll());
-                            System.out.println(GREEN_BOLD_BRIGHT+"O tempo de execução restante do processo é "+(processo.getDuracao()-processo.getExecucao())+RESET);
+                            System.out.println(GREEN_BOLD_BRIGHT+"║ O tempo de execução restante do processo é "+YELLOW_BOLD_BRIGHT+(processo.getDuracao()-processo.getExecucao())+RESET);
                             trocaDeContexto = (fila.size() == 1 ? 0 : TC);
 
                         }
@@ -222,7 +204,7 @@ public class Main {
 
                             terminados.add(fila.poll());
 
-                            System.out.println(YELLOW_BOLD_BRIGHT+"Já cabou..."+RESET);
+                            System.out.println(YELLOW_BOLD_BRIGHT+"║ Já cabou..."+RESET);
                         }    
                     
                     }
@@ -252,10 +234,11 @@ public class Main {
                     for(Processo removido : aRemover){
                         novos.remove(removido);
                 }
+            System.out.println("║ Quantum = "+(1+contadorQuantum)+"...");
             }
 
             else if(!fila.isEmpty()){
-                System.out.println("Entrou na fila está vazia...");
+                System.out.println("║ Entrou na fila está vazia...");
                 //input.nextLine();
 
                 fila.peek().on();
@@ -263,51 +246,44 @@ public class Main {
                 contadorQuantum = QUANTUM;
             }
 
-            System.out.println("Já tô no tempo "+(++tempo)+"...");
-            System.out.println("Quantum = "+contadorQuantum+"...");
-            System.out.println("Troca de contexto = "+trocaDeContexto+"...");
-            System.out.print("Fila: {");
+            System.out.println("║ Já está no tempo "+(++tempo)+"...");
+            System.out.print("║ Fila: {");
+            int i = 0;
             for(Processo p : fila){
-                System.out.printf(" P%d -> ",p.getNumero());
+                i++;
+                System.out.printf(" P%d "+(i==fila.size() ? "\0" : "->"),p.getNumero());
             }
             System.out.println("}");
-            System.out.println("==========================\n");
+            System.out.println("╚═════════════════════════════════════════\n");
 
         };
-        System.out.println("Tempo de execução: "+tempo);
+        System.out.format(" %50s","Tempo de execução: "+BLACK_BOLD+tempo+RESET);
+        System.out.println("\n");
         input.close();
         int esperaTotal = 0, vidaTotal = 0;
-        // for(Processo processo: listaDeProcessos){
-        //     esperaTotal += processo.getEspera();
-        //     vidaTotal += processo.getVida();
-        // }
-        // }System.out.println(CYAN_BOLD_BRIGHT+"Tempo de espera total: "+esperaTotal);
-        // System.out.println("Tempo de espera médio: "+(((double)esperaTotal))/listaDeProcessos.size());
-        // System.out.println("============================");
-        // System.out.println("Tempo de vida total: "+vidaTotal);
-        // System.out.println("Tempo de vida médio: "+(((double)vidaTotal))/listaDeProcessos.size()+RESET);
-        // for(int j = 0; j< listaDeProcessos.size(); j ++){
-        //     Processo processo = listaDeProcessos.get(j);
-        //     System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}\n",j+1,processo.getVida(),processo.getEspera());
-        // }
+        
         listaDeProcessos = listaDeProcessos.stream().sorted((h1,h2) -> h1.getNumero().compareTo(h2.getNumero())).toList();
         esperaTotal = 0; vidaTotal = 0;
+        System.out.print("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
+        System.out.format("║%28s %28s %28s %28s %28s %n", "", "", "", "", "");
+        System.out.format("║%28s %28s %28s %28s %28s %n", "", "", "", "", "");
+
+        System.out.format("║%28s %28s %28s %28s %28s %n", RED_BOLD_BRIGHT+"Processo"+RESET, YELLOW_BOLD+"Vida"+RESET, GREEN_BOLD+"Espera"+RESET, BLUE_BOLD+"Ingresso"+RESET, CYAN+"Término"+RESET);
+        System.out.format("║%28s %28s %28s %28s %28s %n", "", "", "", "", "");
+
         for(int j = 0; j< listaDeProcessos.size(); j ++){
+
             Processo processo = listaDeProcessos.get(j);
-            System.out.printf("%dº processo: Vida-> {%d}, Espera-> {%d}, Ingresso-> {%d}, Termino-> {%d}\n",processo.getNumero(),processo.getVida(),processo.getEspera(),processo.getIngresso(),processo.getTermino());
+            System.out.format("║%28s %28s %28s %28s %28s %n", "P"+RED_BOLD_BRIGHT+processo.getNumero()+RESET,YELLOW_BOLD+processo.getVida()+RESET,GREEN_BOLD+processo.getEspera()+RESET,BLUE_BOLD+processo.getIngresso()+RESET,CYAN+processo.getTermino()+RESET);
+            System.out.format("║%28s %28s %28s %28s %28s %n", "", "", "", "", "");
             vidaTotal += processo.getVida();
             esperaTotal += processo.getEspera();
         }
-
-
-        System.out.println(GREEN_BOLD_BRIGHT+"\n\n-----------------------------------------------");
-        System.out.println(CYAN_BOLD_BRIGHT+"Tempo de espera total: "+esperaTotal);
-        System.err.printf("Tempo de espera médio: %f\n",(((float)esperaTotal))/listaDeProcessos.size());
-        System.out.println("============================");
-        System.out.println("Tempo de vida total: "+vidaTotal);
-        System.err.printf("Tempo de vida médio: %f",(((float)vidaTotal))/listaDeProcessos.size());
-        System.out.println(RESET);
-
+        System.out.println("║\n║");
+        System.out.format("║%28s %28s %28s %28s %28s %n║\n║", RED_BOLD_BRIGHT+"TOTAL"+RESET,YELLOW_BOLD+vidaTotal+RESET,GREEN_BOLD+esperaTotal+RESET,BLUE_BOLD+""+RESET,CYAN+""+RESET);
+        System.out.format("%28s %28s %28s %28s %28s %n║\n║", RED_BOLD_BRIGHT+"MÉDIO"+RESET,YELLOW_BOLD+String.format("%.2f",(((float)vidaTotal))/listaDeProcessos.size())+RESET,GREEN_BOLD+        String.format("%.2f",(((float)esperaTotal))/listaDeProcessos.size())
++RESET,BLUE_BOLD+""+RESET,CYAN+""+RESET);
+        System.out.println("\n╚════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
     }
    
     public static double validarValor(String entrada) throws IllegalArgumentException, NumberFormatException{

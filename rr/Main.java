@@ -49,6 +49,84 @@ public class Main {
         return _swappingContext;
     }
 
+    public static void main(String[] args) {
+
+        int numeroDeProcessos, quantum, trocaDeContexto;
+        List<Processo> lista = new ArrayList<>();
+
+        // while(true){
+            
+        //     try{
+        //         numeroDeProcessos = (int)validarValor(JOptionPane.showInputDialog(null,"Digite quantos processos haverão: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
+        //         quantum = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração do quantum: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
+        //         trocaDeContexto = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração da troca de contexto: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
+        //         break;
+        //     }
+        //     catch(NumberFormatException e){
+        //         JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
+        //     }
+        //     catch(IllegalArgumentException e){
+        //         JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
+        //     }
+        //     catch(ValorInvalidoException e){
+        //         JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
+        //     }
+        // }
+
+        // for(int i = 0; i < numeroDeProcessos; i++) {
+
+        //     while(true){
+
+        //         try{
+        //             int tempoDeIngresso = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite o tempo de ingresso do %dº processo: ",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
+        //             int duracao = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite a duração do %dº processo",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
+        //             lista.add(new Processo(i+1,tempoDeIngresso,duracao));
+        //             break;
+        //         }
+        //         catch(NumberFormatException e){
+        //             JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
+        //         }
+        //         catch(IllegalArgumentException e){
+        //             JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
+        //         }
+        //         catch(ValorInvalidoException e){
+        //             JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
+        //         }
+        //     }
+            
+        // };
+        
+        // lista.add(new Processo(1,20,0));
+        // lista.add(new Processo(2,20,2));
+        // lista.add(new Processo(3,40,1));
+        // lista.add(new Processo(1,40,4));
+        // quantum = 20;
+        // trocaDeContexto = 5;
+
+        quantum = 20;
+        trocaDeContexto = 5; //-> CASO DE TESTE
+        lista.add(new Processo(1,40,4));
+        lista.add(new Processo(2,20,1));
+        lista.add(new Processo(3,50,3));
+        lista.add(new Processo(4,30,2));
+
+        // quantum = 2;
+        // trocaDeContexto = 0; //-> CASO DE TESTE
+        // lista.add(new Processo(1,0,10));
+        // lista.add(new Processo(2,0,4));
+        // lista.add(new Processo(3,0,3));
+        // lista.add(new Processo(4,0,30));
+
+        // quantum = 2;
+        // trocaDeContexto = 1;
+        // lista.add(new Processo(1,10,0));
+        // lista.add(new Processo(2,4,0));
+        // lista.add(new Processo(3,3,0));
+
+        Main main = new Main(quantum, trocaDeContexto, lista);
+        main.executar();
+    }
+
     public void executar(){
         
         Scanner input = new Scanner(System.in);
@@ -70,7 +148,7 @@ public class Main {
             for(Processo processo : novos){
                 System.out.println("Entrou no ngc de jogar processos na espera...");
 
-                if(processo.getIngresso() == tempo || processo.getIngresso() == tempo +1){//sim
+                if(processo.getIngresso() == tempo){//sim
                     esperando.add(processo);
                     if(fila.isEmpty()){
                         processo.on();
@@ -88,7 +166,7 @@ public class Main {
             }
 
             if(isSwappingContext()){
-                System.out.println(BLUE_BOLD_BRIGHT+"Entrou na troca de contexto..."+RESET);
+                
                 input.nextLine();
 
                 for(Processo processo : esperando)
@@ -103,6 +181,8 @@ public class Main {
                         continue;
                     }
                 }
+                System.out.println(BLUE_BOLD_BRIGHT+"Entrou na troca de contexto..."+RESET);
+
             }
 
             else if(isExecuting()){
@@ -124,9 +204,10 @@ public class Main {
                             processo.off();
                             execOff();
                             swappOn();
-                            trocaDeContexto = TC;
                             fila.add(fila.poll());
                             System.out.println(GREEN_BOLD_BRIGHT+"O tempo de execução restante do processo é "+(processo.getDuracao()-processo.getExecucao())+RESET);
+                            trocaDeContexto = (fila.size() == 1 ? 0 : TC);
+
                         }
 
                         else if(processo.isFinished()){
@@ -142,9 +223,8 @@ public class Main {
                             terminados.add(fila.poll());
 
                             System.out.println(YELLOW_BOLD_BRIGHT+"Já cabou..."+RESET);
-                        }
-                            
-                        
+                        }    
+                    
                     }
                     else 
                         processo.esperar();   
@@ -153,25 +233,25 @@ public class Main {
                     esperando.remove(finalizado);
                 }
                 //acho q daria pra remover esse aqui e deixar só tempo + 1, mas fodasse KKKKKKK
-                // for(Processo processo : novos){
-                //     System.out.println("Entrou no ngc de jogar processos na espera...");
+                for(Processo processo : novos){
+                    System.out.println("Entrou no ngc de jogar processos na espera...");
 
-                //     if(processo.getIngresso() == tempo){//sim
-                //         esperando.add(processo);
-                //         if(fila.isEmpty()){
-                //             processo.on();
-                //             execOn();
-                //         }
-                //         fila.add(processo); 
-                //         aRemover.add(processo);
-                //     }
-                //     else{
-                //         break;
-                //     }
-                //     }
-                //     for(Processo removido : aRemover){
-                //         novos.remove(removido);
-                // }
+                    if(processo.getIngresso() == tempo){//sim
+                        esperando.add(processo);
+                        if(fila.isEmpty()){
+                            processo.on();
+                            execOn();
+                        }
+                        fila.add(processo); 
+                        aRemover.add(processo);
+                    }
+                    else{
+                        break;
+                    }
+                    }
+                    for(Processo removido : aRemover){
+                        novos.remove(removido);
+                }
             }
 
             //tirar isso dps
@@ -186,10 +266,10 @@ public class Main {
                 contadorQuantum = QUANTUM;
             }
 
-            else{
-                System.out.println("algo deu muito errado");
-                System.exit(1);
-            }
+            // else{
+            //     System.out.println("algo deu muito errado");
+            //     System.exit(1);
+            // }
 
             System.out.println("Já tô no tempo "+(++tempo)+"...");
             System.out.println("Quantum = "+contadorQuantum+"...");
@@ -228,7 +308,7 @@ public class Main {
         }
 
 
-        System.out.println(GREEN_BOLD_BRIGHT+"\n\n--------2---------------------------------------");
+        System.out.println(GREEN_BOLD_BRIGHT+"\n\n-----------------------------------------------");
         System.out.println(CYAN_BOLD_BRIGHT+"Tempo de espera total: "+esperaTotal);
         System.err.printf("Tempo de espera médio: %f\n",(((double)esperaTotal))/listaDeProcessos.size());
         System.out.println("============================");
@@ -238,86 +318,6 @@ public class Main {
 
     }
    
-
-    public static void main(String[] args) {
-
-        int numeroDeProcessos, quantum, trocaDeContexto;
-        List<Processo> lista = new ArrayList<>();
-
-        // while(true){
-            
-        //     try{
-        //         numeroDeProcessos = (int)validarValor(JOptionPane.showInputDialog(null,"Digite quantos processos haverão: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
-        //         quantum = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração do quantum: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
-        //         trocaDeContexto = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração da troca de contexto: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
-        //         break;
-        //     }
-        //     catch(NumberFormatException e){
-        //         JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //     }
-        //     catch(IllegalArgumentException e){
-        //         JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //     }
-        //     catch(ValorInvalidoException e){
-        //         JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //     }
-        // }
-
-        // for(int i = 0; i < numeroDeProcessos; i++) {
-
-        //     while(true){
-
-        //         try{
-        //             int tempoDeIngresso = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite o tempo de ingresso do %dº processo: ",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
-        //             int duracao = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite a duração do %dº processo",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
-        //             lista.add(new Processo(i+1,duracao,tempoDeIngresso));
-        //             break;
-        //         }
-        //         catch(NumberFormatException e){
-        //             JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //         }
-        //         catch(IllegalArgumentException e){
-        //             JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //         }
-        //         catch(ValorInvalidoException e){
-        //             JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //         }
-        //     }
-            
-        // };
-        
-        // lista.add(new Processo(1,20,0));
-        // lista.add(new Processo(2,20,2));
-        // lista.add(new Processo(3,40,1));
-        // lista.add(new Processo(1,40,4));
-        // quantum = 20;
-        // trocaDeContexto = 5;
-
-        // quantum = 20;
-        // trocaDeContexto = 5; //-> CASO DE TESTE
-        // lista.add(new Processo(1,40,4));
-        // lista.add(new Processo(2,20,1));
-        // lista.add(new Processo(3,50,3));
-        // lista.add(new Processo(4,30,0));
-
-        quantum = 15;
-        trocaDeContexto = 4; //-> CASO DE TESTE
-        lista.add(new Processo(1,10,5));
-        lista.add(new Processo(2,30,15));
-        lista.add(new Processo(3,20,10));
-        lista.add(new Processo(4,40,0));
-
-        // quantum = 2;
-        // trocaDeContexto = 1;
-        // lista.add(new Processo(1,10,0));
-        // lista.add(new Processo(2,4,0));
-        // lista.add(new Processo(3,3,0));
-
-        Main main = new Main(quantum, trocaDeContexto, lista);
-        main.executar();
-    }
-   
-
     public static double validarValor(String entrada) throws IllegalArgumentException, NumberFormatException{
         if(Optional.ofNullable(entrada).isEmpty() ||  entrada.trim().isBlank())
             throw new IllegalArgumentException();

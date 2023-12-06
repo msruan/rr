@@ -1,15 +1,15 @@
 package rr;
 
 public class Processo {
+    private int tempoDeEspera;
     private int _horaDoTermino;
     private int numero;
     private int duracao;
     private int tempoDeExecucao = 0;
-    private int tempoDeEspera = 0;
     private boolean isOn;
     private Integer tempoDeIngresso; 
 
-    public Processo(int numero ,int duracao, int tempoDeIngresso){
+    public Processo(int numero , int tempoDeIngresso, int duracao){
         this.numero = numero;
         this.duracao = duracao;
         this.tempoDeIngresso = tempoDeIngresso;
@@ -19,12 +19,6 @@ public class Processo {
         return _horaDoTermino;
     }
 
-    public int getVida(){
-        return (tempoDeEspera + duracao)-tempoDeIngresso;
-    }
-    public int getEspera(){
-        return tempoDeEspera;
-    }
     //Todo: ver se isso aqui não tá lançando nenhuma exceção e tals
     public int getVida2(){
         return _horaDoTermino - tempoDeIngresso;

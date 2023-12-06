@@ -116,6 +116,7 @@ public class Main {
         List<Processo> terminados = new ArrayList<>();
         
         Queue<Processo> fila = new LinkedList<>();
+        Queue<Processo> filaOutput = new LinkedList<>();
 
         int tempo = 0, contadorQuantum = QUANTUM, trocaDeContexto = TC;
         
@@ -135,6 +136,7 @@ public class Main {
                         execOn();
                     }
                     fila.add(processo); 
+                    filaOutput.add(processo); 
                     aRemover.add(processo);
                 }
                 else{
@@ -188,6 +190,7 @@ public class Main {
                             processo.off();
                             execOff();
                             swappOn();
+                            filaOutput.add(fila.peek()); 
                             fila.add(fila.poll());
                             System.out.println(GREEN_BOLD_BRIGHT+"║ O tempo de execução restante do processo é "+YELLOW_BOLD_BRIGHT+(processo.getDuracao()-processo.getExecucao())+RESET);
                             trocaDeContexto = (fila.size() == 1 ? 0 : TC);
@@ -226,6 +229,7 @@ public class Main {
                             processo.on();
                             execOn();
                         }
+                        filaOutput.add(processo); 
                         fila.add(processo); 
                         aRemover.add(processo);
                     }
@@ -259,8 +263,14 @@ public class Main {
             System.out.println("╚═════════════════════════════════════════\n");
 
         };
-        System.out.format(" %50s","Tempo de execução: "+BLACK_BOLD+tempo+RESET);
-        System.out.println("\n");
+        System.out.println("\n\n");
+            System.out.format(" %50s",BLACK_BOLD+"Tempo de execução: "+tempo+RESET+" //" +PURPLE_BOLD+" Fila total: {");
+            int i = 0;
+            for(Processo p : filaOutput){
+                i++;
+                System.out.printf(" P%d "+(i==filaOutput.size() ? "\0" : "->"),p.getNumero());
+            }
+            System.out.println("}\n"+RESET);
         input.close();
         int esperaTotal = 0, vidaTotal = 0;
         

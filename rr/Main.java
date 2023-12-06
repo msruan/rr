@@ -52,54 +52,55 @@ public class Main {
         int numeroDeProcessos, quantum, trocaDeContexto;
         List<Processo> lista = new ArrayList<>();
 
-        // while(true){
+        while(true){
             
-        //     try{
-        //         numeroDeProcessos = (int)validarValor(JOptionPane.showInputDialog(null,"Digite quantos processos haverão: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
-        //         quantum = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração do quantum: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
-        //         trocaDeContexto = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração da troca de contexto: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
-        //         break;
-        //     }
-        //     catch(NumberFormatException e){
-        //         JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //     }
-        //     catch(IllegalArgumentException e){
-        //         JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //     }
-        //     catch(ValorInvalidoException e){
-        //         JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //     }
-        // }
+            try{
+                numeroDeProcessos = (int)validarValor(JOptionPane.showInputDialog(null,"Digite quantos processos haverão: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
+                quantum = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração do quantum: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
+                trocaDeContexto = (int)validarValor(JOptionPane.showInputDialog(null,"Digite a duração da troca de contexto: ", "Inicio", JOptionPane.QUESTION_MESSAGE));
+                break;
+            }
+            catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
+            }
+            catch(IllegalArgumentException e){
+                JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
+            }
+            catch(ValorInvalidoException e){
+                JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
+            }
+        }
 
-        // for(int i = 0; i < numeroDeProcessos; i++) {
+        for(int i = 0; i < numeroDeProcessos; i++) {
 
-        //     while(true){
+            while(true){
 
-        //         try{
-        //             int tempoDeIngresso = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite o tempo de ingresso do %dº processo: ",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
-        //             int duracao = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite a duração do %dº processo",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
-        //             lista.add(new Processo(i+1,tempoDeIngresso,duracao));
-        //             break;
-        //         }
-        //         catch(NumberFormatException e){
-        //             JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //         }
-        //         catch(IllegalArgumentException e){
-        //             JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //         }
-        //         catch(ValorInvalidoException e){
-        //             JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
-        //         }
-        //     }
+                try{
+                    int tempoDeIngresso = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite o tempo de ingresso do %dº processo: ",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
+                    int duracao = (int)validarValor(JOptionPane.showInputDialog(null,String.format("Digite a duração do %dº processo",i+1), "Processos", JOptionPane.QUESTION_MESSAGE));
+                    lista.add(new Processo(i+1,tempoDeIngresso,duracao));
+                    break;
+                }
+                catch(NumberFormatException e){
+                    JOptionPane.showMessageDialog(null, "Tenha certeza de digitar um número!", "Erro",JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IllegalArgumentException e){
+                    JOptionPane.showMessageDialog(null, "Tenha certeza de não deixar nenhum campo em branco!", "Erro",JOptionPane.ERROR_MESSAGE);
+                }
+                catch(ValorInvalidoException e){
+                    JOptionPane.showMessageDialog(null, "Só é possível passar valores positivos!", "Erro",JOptionPane.ERROR_MESSAGE);
+                }
+            }
             
-        // };
+        };
 
-        quantum = 15;
-        trocaDeContexto = 4; //-> CASO DE TESTE
-        lista.add(new Processo(1,5,10));
-        lista.add(new Processo(2,15,30));
-        lista.add(new Processo(3,20,20));
-        lista.add(new Processo(4,0,40));
+        // quantum = 20;
+        // trocaDeContexto = 5; //-> CASO DE TESTE
+        // lista.add(new Processo(1,4,40));
+        
+        // lista.add(new Processo(2,1,20));
+        // lista.add(new Processo(3,3,50));
+        // lista.add(new Processo(4,0,30));
 
         Main main = new Main(quantum, trocaDeContexto, lista);
         main.executar();
@@ -107,6 +108,7 @@ public class Main {
 
     public void executar(){
         
+
         Scanner input = new Scanner(System.in);
 
         List<Processo> novos = new ArrayList<>(listaDeProcessos);
@@ -126,7 +128,7 @@ public class Main {
             for(Processo processo : novos){
                 //System.out.println("Entrou no ngc de jogar processos na espera...");
 
-                if(processo.getIngresso() == tempo){//sim
+                if(processo.getIngresso() == tempo || processo.getIngresso() == tempo+1){//sim
                     esperando.add(processo);
                     if(fila.isEmpty()){
                         processo.on();
